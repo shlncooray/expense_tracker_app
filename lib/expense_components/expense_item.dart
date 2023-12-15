@@ -16,16 +16,17 @@ class ExpenseItem extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Text(expense.title),
+            Text(expense.title), // #TODO - Add theme title styles
             const SizedBox(height: 4),
             Row(
               children: [
                 Text('LKR ${expense.amount.toStringAsFixed(2)}'),
+                const Spacer(),
                 Row(
                   children: [
-                    // Icon(categoryIcons[expense.category]),
+                    Icon(categoryIcons[expense.category]),
                     const SizedBox(width: 8),
-                    Text(expense.date.toString()),
+                    Text(expense.formattedDate),
                   ],
                 ),
               ],

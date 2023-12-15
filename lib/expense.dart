@@ -1,7 +1,10 @@
+import 'package:expense_tracker_app/expense_components/chart.dart';
 import 'package:expense_tracker_app/expense_components/expense_list.dart';
+import 'package:expense_tracker_app/expense_components/new_expense.dart';
 import 'package:expense_tracker_app/models/expense.dart';
 import 'package:expense_tracker_app/util.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 const filePath = 'assets/json/expense_data.json';
 
@@ -33,19 +36,35 @@ class _ExpensesState extends State<Expenses> {
     });
   }
 
-  void _openAddExpenseOverlay() {
-    // #TODO - Add show bottom model
+  void addExpense(Expense expense) {
+    setState(() {
+      expenses.add(expense);
+    });
   }
 
-  // #TODO - addExpense function to expense List and pass to NewExpense widget;
+  void removeExpense(Expense expense) {
+    setState(() {
+      expenses.remove(expense);
+    });
+    // #TODO - Add Snack Bar && clear snackbars
+  }
 
-  // #TODO - removeExpense function to expense List and pass to NewExpense widget;
+  void _openAddExpenseOverlay() {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        useSafeArea: true,
+        builder: (ctx) => NewExpense(onAddExpense: addExpense));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter ExpenseTracker'),
+        title: Text(
+          'Flutter ExpenseTracker',
+          style: GoogleFonts.audiowide(color: Colors.amber),
+        ),
         actions: [
           IconButton(
             onPressed: _openAddExpenseOverlay,
@@ -55,7 +74,13 @@ class _ExpensesState extends State<Expenses> {
       ),
       body: Column(
         children: [
-          Expanded(child: ExpensesList(expenses: expenses)),
+          const SizedBox(
+            height: 10,
+          ),
+          Chart(expenses: expenses),
+          Expanded(
+              child: ExpensesList(
+                  expenses: expenses, onRemoveExpense: removeExpense)),
         ],
       ),
     );
