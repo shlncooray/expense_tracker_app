@@ -43,10 +43,24 @@ class _ExpensesState extends State<Expenses> {
   }
 
   void removeExpense(Expense expense) {
+    final expenseIndex = expenses.indexOf(expense);
     setState(() {
       expenses.remove(expense);
     });
-    // #TODO - Add Snack Bar && clear snackbars
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 5),
+        backgroundColor: Theme.of(context).colorScheme.error,
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              expenses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+        content: const Text('You have deleted an expense!')));
   }
 
   void _openAddExpenseOverlay() {

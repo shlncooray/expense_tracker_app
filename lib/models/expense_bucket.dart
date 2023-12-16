@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:expense_tracker_app/models/expense.dart';
 
 class ExpenseBucket {
@@ -9,7 +11,18 @@ class ExpenseBucket {
   final Category category;
   final List<Expense> expenses;
 
-  // #TODO - Add Alternative constructor function
+  ExpenseBucket.forCategory(List<Expense> allExpenses, this.category)
+      : expenses = allExpenses
+            .where((expense) => expense.category == category)
+            .toList();
 
-  // #TODO - Implement getter to return total expenses of a expense bucket
+  double get totalExpenses {
+    double sum = 0.00;
+
+    for (var expense in expenses) {
+      sum += expense.amount;
+    }
+
+    return sum;
+  }
 }

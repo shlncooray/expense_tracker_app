@@ -4,14 +4,28 @@ import 'package:expense_tracker_app/models/expense.dart';
 import 'package:flutter/material.dart';
 
 class Chart extends StatelessWidget {
-  Chart({super.key, required this.expenses});
+  const Chart({super.key, required this.expenses});
 
   final List<Expense> expenses;
 
-  // #TODO - Add expense buckets for each category
-  final List<ExpenseBucket> buckets = [];
+  List<ExpenseBucket> get buckets {
+    return [
+      ExpenseBucket.forCategory(expenses, Category.food),
+      ExpenseBucket.forCategory(expenses, Category.travel),
+      ExpenseBucket.forCategory(expenses, Category.leisure),
+      ExpenseBucket.forCategory(expenses, Category.work)
+    ];
+  }
 
-  // #TODO - Calculate max total expense
+  double get maxTotalExpense {
+    double maxTotalExpense = 0;
+    for (var bucket in buckets) {
+      if (bucket.totalExpenses > maxTotalExpense) {
+        maxTotalExpense = bucket.totalExpenses;
+      }
+    }
+    return maxTotalExpense;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +58,11 @@ class Chart extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                // #TODO - Calculate fill using bucket totalExpenses and maxTotalExpense
-                for (final bucket in buckets) ChartBar(fill: 0)
+                for (final bucket in buckets)
+                  ChartBar(
+                      fill: bucket.totalExpenses == 0
+                          ? 0
+                          : bucket.totalExpenses / maxTotalExpense)
               ],
             ),
           ),
